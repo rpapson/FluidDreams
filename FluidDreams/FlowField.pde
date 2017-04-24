@@ -2,8 +2,6 @@ class FlowField {
   FlowElement[][] fieldPoints;
   int numX;
   int numY;
-  float xoff = 0;
-  float yoff = 0;
 
   FlowField(int t_numX, int t_numY, int t_size) {
     numX = t_numX;
@@ -12,34 +10,23 @@ class FlowField {
     for (int i=0; i<t_numY; i++) {
       for (int j=0; j<t_numX; j++) {
         fieldPoints[i][j] = new FlowElement(j*t_size+t_size/2, i*t_size+t_size/2, t_size);
+                fieldPoints[i][j].flow = new PVector(0,0);
       }
-    }
-    init();
-  }
-
-  void init() {
-
-    for (int i = 0; i < numY; i++) {
-
-      for (int j = 0; j < numX; j++) {
-        float theta = map(noise(yoff, xoff), 0, 1.0, 0, TWO_PI);
-        println(theta);
-        fieldPoints[i][j].flow = new PVector(cos(theta), sin(theta));
-        xoff += 0.005;
-      }
-      yoff += 0.005;
     }
   }
 
-  void update() {
+
+  void update(float t_inc) {
+    float yoff = 0;
     for (int i = 0; i < numY; i++) {
+      float xoff=0;
       for (int j = 0; j < numX; j++) {
-        float theta = map(noise(yoff, xoff), 0, 1.0, 0, TWO_PI);
-        println(theta);
+        float theta = map(noise(yoff, xoff, zoff), 0, 1.0, 0, 2*TWO_PI);
+  //      println(theta);
         fieldPoints[i][j].flow.set(cos(theta), sin(theta));
-        xoff += 0.005;
+        xoff += t_inc;
       }
-      yoff += 0.005;
+      yoff += t_inc;
     }
   }
 
